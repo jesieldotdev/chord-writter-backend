@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import db from "./mongodb";
 import Verse from "./chords.model";
 import bodyParser from "body-parser";
+import Music from "./chords.model";
 
 dotenv.config();
 
@@ -23,9 +24,9 @@ const server = http.createServer(app);
 
 const port = process.env.PORT ?? 5000;
 
-const getUsers = async () => {
+const getMusics = async () => {
   try {
-    const users = await Verse.find({});
+    const users = await Music.find({});
     //    console.log(users);
     return users;
   } catch (error) {
@@ -34,55 +35,54 @@ const getUsers = async () => {
 };
 
 app.get("/", async (req, res) => {
-  const users = await getUsers();
-  res.send(users);
+  const musics = await getMusics();
+  res.send(musics);
 });
 
-app.post("/verse", async (req, res) => {
-  const verse = new Verse(req.body);
-  console.log(verse);
+app.post("/music", async (req, res) => {
+  const music = new Music(req.body);
+  console.log(music);
   try {
-    await verse.save();
-    res.status(201).send(verse);
+    await music.save();
+    res.status(201).send(music);
   } catch (error) {
     res.status(400).send(error);
   }
 });
 
-app.patch("/verse/:id", async (req, res) => {
+app.patch("/music/:id", async (req, res) => {
   const id = req.params.id;
   const updates = req.body;
   try {
-  const result = await Verse.findByIdAndUpdate(id, updates, {new: true});
-  res.status(200).send({message: 'Document updated', result});
+    const result = await Music.findByIdAndUpdate(id, updates, { new: true });
+    res.status(200).send({ message: "Document updated", result });
   } catch (error) {
-  res.status(400).send(error);
+    res.status(400).send(error);
   }
- });
- 
+});
 
-app.delete("/verse/:id", async (req, res) => {
+app.delete("/music/:id", async (req, res) => {
   const id = req.params.id;
   try {
-  const result = await Verse.findByIdAndDelete(id);
-  res.status(200).send({message: 'Document removed', result});
+    const result = await Music.findByIdAndDelete(id);
+    res.status(200).send({ message: "Document removed", result });
   } catch (error) {
-  res.status(400).send(error);
+    res.status(400).send(error);
   }
- });
+});
 
- app.get("/verse/:id", async (req, res) => {
+app.get("/music/:id", async (req, res) => {
   const id = req.params.id;
   try {
-  const verse = await Verse.findById(id);
-  if (!verse) {
-  return res.status(404).send({ message: 'Verse not found' });
-  }
-  res.send(verse);
+    const music = await Music.findById(id);
+    if (!music) {
+      return res.status(404).send({ message: "Verse not found" });
+    }
+    res.send(music);
   } catch (error) {
-  res.status(500).send(error);
+    res.status(500).send(error);
   }
- });
+});
 
 server.listen(port, () => {
   console.log(`SERVER RUNING IN PORT ${port}`);

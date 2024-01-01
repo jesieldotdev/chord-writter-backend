@@ -1,59 +1,61 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from "mongoose";
 
-import { Schema } from 'mongoose';
-
-// Interface SheetProps
+// Define the SheetProps interface
 interface SheetProps {
- note: string;
- intervals: string[];
+  note: string;
+  intervals: string[];
 }
 
+// Create the sheetSchema
 const sheetSchema = new Schema<SheetProps>({
- note: String,
- intervals: [String],
+  note: String,
+  intervals: [String],
 });
 
-// Interface VerseProps
-interface VerseProps {
- id: string;
- name: string;
- chords: SheetProps[];
+// Define the VerseProps interface
+interface MusicProps {
+  name: string;
+  sheets: {
+    id: string;
+    name: string;
+    chords: SheetProps[];
+  }[];
 }
 
-const verseSchema = new Schema<VerseProps>({
- id: String,
- name: String,
- chords: [sheetSchema],
+// Create the verseSchema
+const musicSchema = new Schema<MusicProps>({
+  name: String,
+  sheets: [
+    {
+      id: String,
+      name: String,
+      chords: [sheetSchema],
+    },
+  ],
 });
 
-// Interface NewTitle
-interface NewTitle {
- id: string;
- newName: string;
-}
-
-const titleSchema = new Schema<NewTitle>({
- id: String,
- newName: String,
-});
-
-
-const Verse = mongoose.model('Verse', verseSchema)
+// Create the Sheets model
+const Music = mongoose.model("Music", musicSchema);
 
 // async function addData() {
-//     try {
-//      const verse = new Verse({
-//        id: '1',
-//        name: 'Verse 1',
-//        chords: [{ note: 'A', intervals: ['A', 'B', 'C'] }],
-//      });
-//      await verse.save();
-//      console.log('Data added successfully');
-//     } catch (error) {
-//      console.log(error);
-//     }
-//    }
-   
-//    addData();
+//   try {
+//     const verse = new Sheets({
+//       name: "Music name",
+//       sheets: [
+//         {
+//           id: "1",
+//           name: "Verse 1",
+//           chords: [{ note: "A", intervals: ["A", "B", "C"] }],
+//         },
+//       ],
+//     });
+//     await verse.save();
+//     console.log("Data added successfully");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
-export default Verse
+// addData();
+
+export default Music;
