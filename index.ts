@@ -71,6 +71,19 @@ app.delete("/verse/:id", async (req, res) => {
   }
  });
 
+ app.get("/verse/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+  const verse = await Verse.findById(id);
+  if (!verse) {
+  return res.status(404).send({ message: 'Verse not found' });
+  }
+  res.send(verse);
+  } catch (error) {
+  res.status(500).send(error);
+  }
+ });
+
 server.listen(port, () => {
   console.log(`SERVER RUNING IN PORT ${port}`);
 });
