@@ -4,12 +4,13 @@ import Message from "./chords.model";
 import verseSchema from "./chords.model";
 import Verse from "./chords.model";
 
-const MONGO_URI = process.env.MONGO_URI;
+dotenv.config();
+const MONGO_URI = process.env.MONGO_URI
 
 const db = async () => {
   try {
     const con = await mongoose.connect(
-      "mongodb+srv://jesiel364:12458917@jesiel-db.9q7fa.mongodb.net/?retryWrites=true&w=majority"
+      MONGO_URI || ''
     );
     console.log(`mongodb connected: ${con.connection.host}`);
   } catch (error) {
