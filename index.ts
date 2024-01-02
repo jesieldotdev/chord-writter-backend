@@ -3,7 +3,6 @@ import cors from "cors";
 import http from "http";
 import dotenv from "dotenv";
 import db from "./mongodb";
-import Verse from "./chords.model";
 import bodyParser from "body-parser";
 import Music from "./chords.model";
 
@@ -16,9 +15,18 @@ async function data() {
 data();
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
-app.use(cors());
+const API_KEY = process.env.API_KEY;
+
+app.use((req, res, next) => {
+  const apiKey = req.headers["x-api-key"];
+  if (apiKey !== API_KEY) {
+    return res.status(401).json({ error: "Invalid API key" });
+  }
+  next();
+});
 
 const server = http.createServer(app);
 
