@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 
 const server = http.createServer(app);
 
-const port = process.env.PORT ?? 5000;
+const port = process.env.PORT ?? 4000;
 
 const getMusics = async () => {
   try {
