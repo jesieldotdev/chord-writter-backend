@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import dotenv from "dotenv";
-import db from "./mongodb";
+import db from "../config/mongodb";
 import bodyParser from "body-parser";
-import Music from "./chords.model";
+import Music from "../models/chords.model";
 
 dotenv.config();
 
