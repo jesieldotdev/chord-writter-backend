@@ -4,7 +4,7 @@ import http from "http";
 import dotenv from "dotenv";
 import db from "../config/mongodb";
 import bodyParser from "body-parser";
-import Music from "../models/chords.model";
+import { createMusic, deleteMusic, editMusic, getMusicById, getMusics } from "./controllers/controllers";
 
 dotenv.config();
 
@@ -32,65 +32,15 @@ const server = http.createServer(app);
 
 const port = process.env.PORT ?? 4001;
 
-const getMusics = async () => {
-  try {
-    const users = await Music.find({});
-    //    console.log(users);
-    return users;
-  } catch (error) {
-    console.log(error);
-  }
-};
+app.get("/", getMusics);
 
-app.get("/", async (req, res) => {
-  const musics = await getMusics();
-  res.send(musics);
-});
+app.post("/music", createMusic);
 
-app.post("/music", async (req, res) => {
-  const music = new Music(req.body);
-  console.log(music);
-  try {
-    await music.save();
-    res.status(201).send(music);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+app.patch("/music/:id", editMusic);
 
-app.patch("/music/:id", async (req, res) => {
-  const id = req.params.id;
-  const updates = req.body;
-  try {
-    const result = await Music.findByIdAndUpdate(id, updates, { new: true });
-    res.status(200).send({ message: "Document updated", result });
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+app.delete("/music/:id", deleteMusic);
 
-app.delete("/music/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const result = await Music.findByIdAndDelete(id);
-    res.status(200).send({ message: "Document removed", result });
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
-
-app.get("/music/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const music = await Music.findById(id);
-    if (!music) {
-      return res.status(404).send({ message: "Verse not found" });
-    }
-    res.send(music);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+app.get("/music/:id", getMusicById);
 
 server.listen(port, () => {
   console.log(`SERVER RUNING IN PORT ${port}`);
