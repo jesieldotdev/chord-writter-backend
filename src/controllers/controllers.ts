@@ -15,12 +15,12 @@ export const getMusics = async (req, res) => {
   const musics = await getMusicsDb();
   return res.send(musics);
 }
-
+    
 export const createMusic = async (req, res) => {
   const music = new Music(req.body);
   console.log(music);
   try {
-    await music.save();
+    await music.save(); 
     res.status(201).send(music);
   } catch (error) {
     res.status(400).send(error);
